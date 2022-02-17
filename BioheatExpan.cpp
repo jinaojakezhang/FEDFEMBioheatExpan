@@ -199,19 +199,21 @@ class ModelStates
 {
 public:
     vector<float> m_external_F,          m_ele_nodal_internal_F,                        // individual ele nodal internal F to avoid race condition, can be summed to get internal_F for nodes
-                  m_disp_mag_t,          m_fixT_mag,
+                  m_disp_mag_t,
                   m_central_diff_const1, m_central_diff_const2, m_central_diff_const3,
                   m_prev_U,              m_curr_U,              m_next_U,
                   m_external_Q,          m_external_Q0,         m_ele_nodal_internal_Q, // individual ele nodal internal Q to avoid race condition, can be summed to get internal_Q for nodes
+                  m_fixT_mag,
                   m_constA,
                   m_curr_T,              m_next_T;
     vector<bool>  m_fixP_flag,           m_fixT_flag;
     ModelStates(const Model& model) :
         m_external_F         (model.m_num_M_DOFs,        0.f), m_ele_nodal_internal_F(model.m_tets.size() * 4 * 3, 0.f),
-        m_disp_mag_t         (model.m_num_M_DOFs,        0.f), m_fixT_mag            (model.m_num_T_DOFs,          0.f),
+        m_disp_mag_t         (model.m_num_M_DOFs,        0.f),
         m_central_diff_const1(model.m_num_M_DOFs,        0.f), m_central_diff_const2 (model.m_num_M_DOFs,          0.f), m_central_diff_const3 (model.m_num_M_DOFs,      0.f),
         m_prev_U             (model.m_num_M_DOFs,        0.f), m_curr_U              (model.m_num_M_DOFs,          0.f), m_next_U              (model.m_num_M_DOFs,      0.f),
         m_external_Q         (model.m_num_T_DOFs,        0.f), m_external_Q0         (model.m_num_T_DOFs,          0.f), m_ele_nodal_internal_Q(model.m_tets.size() * 4, 0.f),
+        m_fixT_mag           (model.m_num_T_DOFs,        0.f),
         m_constA             (model.m_num_T_DOFs,        0.f),
         m_curr_T             (model.m_num_T_DOFs, model.m_T0), m_next_T              (model.m_num_T_DOFs,   model.m_T0),
         m_fixP_flag          (model.m_num_M_DOFs,      false), m_fixT_flag           (model.m_num_T_DOFs,        false)
@@ -252,7 +254,7 @@ int main(int argc, char **argv)
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 Model* readModel(int argc, char **argv)
 {
-    if (argc - 1 == 0) { cerr << "\n\tError: missing input argument (e.g., model.txt)." << endl; return nullptr; }
+    if (argc - 1 == 0) { cerr << "\n\tError: missing input argument (e.g., Liver_Iso.txt)." << endl; return nullptr; }
     FILE* file;
     if (fopen_s(&file, argv[1], "r") != 0) { cerr << "\n\tError: cannot open file: " << argv[1] << endl; return nullptr; }
     else
